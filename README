@@ -1,0 +1,125 @@
+Hi,everybody:
+   didiwei is a framework for anti malware and sample manager,as blow:
+    +---------------------------------------------------------------+
+	|        ---  (_)        ---  (_)  _    _    _             (_)  |
+	|   ____|   ||   |  ____|   ||   || |  | |  | |   _____   |   | |
+	|  /  __|   ||   | /  __|   ||   || |  | |  | | /  ___  \ |   | |
+	| |  /  |   ||   ||  /  |   ||   || | _| |_ | ||  /___\ _||   | |
+	| | (___|   ||   || (___|   ||   | \         / |  | __ _  |   | |
+	|  \ ___|___||___| \ ___|___||___|  \ _ ^ _ /   \ ______/ |___| |
+	|                                                               |
+	|                                                     goabout2  |
+	+---------------------------------------------------------------+
+	|                     My blog:  http://www.cnblogs.com/goabout2/|
+	+---------------------------------------------------------------+
+   you can user it as blow:
+	-h, --help            show this help message and exit
+	--dshow DSHOW         show the current datebase(ds/dshow all )
+	--dinsert DINSERT     insert one sample info into the datebase,in this
+	                      version ,you need inter data format as follow :
+	                      id,famalyname,size,hash,md5,sign,time,deparment
+	--ddel DDEL           del one sample info from the datebase
+	--dupdate DUPDATE     update one sample info into the datebase
+	--upload UPLOAD       upload the killcore to specify machine and execut
+	                      kill/scan,you can tell killcore which os
+	                      is,windows/linux/none,if you do not kenw,inter with
+	                      none
+	--tools TOOLS         some tools to use during the analyse
+	--analyse ANALYSE     start the analysecore for a sample
+	--search SEARCH [SEARCH ...]
+	                      has to search for in local repository
+	--update UPDATE       updates local hash containing files (--update
+	                      all/missing/10,11,12/0-20)
+	--latest LATEST       sets latest vriusshare file released
+	--directory DIRECTORY
+	                   set working directory
+
+	in this framework,except a datebase to record the smaple info ,wo also import 
+	a opensource obj VirusShare-Search,in the origin obj,the code need py3,i change
+	it,and make it adopt to py 2.7,you can find it int the blow url 
+	https://github.com/AdamGreenhill/VirusShare-Search
+
+	how to wirte a congif.
+	in the directory ,you can fond to file named "windidiwei" and "lindidiwei",this 
+	is the killcore to our framework,lucky ,with pyinstaller,we can let our killcore
+	run in windows,linux,and max os(now the killcore support kill the sample in windows
+	and linux).so let's begin.
+	[windows/linux]
+	this tell the killcore which os it running,beacuse for different os,the way to 
+	kill a malware is different.
+	option = scan/kill
+	this argc tell the killcore which mission to execute,scan or kill.
+	filesacn = /boot;/usr/bin
+	this arg tell the killcore the dic the samle may exit.
+	sign = xxxxxxx
+	this argc tell the killcore the target's sign,killcore need this to find the malware.
+
+	above argcs is the commond option in linux and windows.in these two os support
+	different option args.
+
+	in linux
+	filepath = /boot;/usr/bin
+	like filescan
+
+	initdscan = the init file need to scan ,killcan can scan the file an find the file may 
+	dangerous.
+
+	command = ls;ps -A
+	killcore suppport to execue same command when a mission running
+
+	delfile = /bot/fdsal/usr/bin/fddk;
+	list the file need to del,must end with ';'
+	the killcore in linxu is more intelligent 
+
+	in windows
+	filepath = /boot;/usr/bin
+	like filescan
+
+	command = ls;ps -A
+	killcore suppport to execue same command when a mission running
+
+	register = HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+	this arg tell the killcore to del the specify reg,for config reg,you shoule use moren 
+	as the name fo the key
+
+	process = notepad.exe
+	this arg tell the killcore which process need to stop
+
+	devicelink = \\\\.\\SysLinkUsbAminDevice
+	iocontrolcode = 0x250030
+	support to unload the sys,but need the device and ioclcode 
+
+	delfile = /bot/fdsal/usr/bin/fddk;
+	list the file need to del,must end with ';'
+
+	some example
+	the linux malware gates
+	[linuxd]
+	option = scan
+	sign = 88FD2FE8EF8D51263B037677FD30F25CBFEB57F759F711FB41956288A85E9655F
+	filescan = /bin;/usr/bin;/usr/bin/bsd-port
+	filepath = /bin;/usr/bin;/usr/bin/bsd-port
+	initdscan = /etc/init.d/DbSecuritySpt;/etc/rc1.d/DbSecuritySpt**d;/etc/rc1.d/selinux**d;/etc/rc2.d/DbSecuritySpt**d;/etc/rc2.d/selinux**d;/etc/rc3.d/DbSecuritySpt**d;/etc/rc3.d/selinux**d;/etc/rc4.d/DbSecuritySpt**d;/etc/rc4.d/selinux**d;/etc/rc5.d/DbSecuritySpt**d;/etc/rc5.d/selinux**d
+	delpath = /etc/init.d/DbSecuritySpt;/etc/init.d/selinux;
+	command = cp /usr/bin/dpkgd/ps /bin;cp /usr/bin/dpkgd/ss /bin;cp /usr/bin/dpkgd/lsof /bin;cp /usr/bin/dpkgd/netstat /bin
+
+	the linxu malware xor
+	[linux]
+	option = scan
+	sign = m4S4nAC/nA
+	filescan = /root/Desktop/sample;/lib/udev;/boot
+	filepath = /lib/udev;/boot
+	delpath = /etc/cron.hourly/cron.sh;
+
+	the windows malware 海莲花
+	[windowss]
+	option = kill
+	sign = PPPhK
+	filescan = C:\Documents and Settings\Administrator\Application Data\Tencent\QQ;C:\Documents and Settings\Administrator\Application Data\Tencent\QQ\Plugin\Com.Tencent.DirectShow
+	filepath = C:\Documents and Settings\Administrator\Application Data\Tencent\QQ;C:\Documents and Settings\Administrator\Application Data\Tencent\QQ\Plugin\Com.Tencent.DirectShow
+	processes = msiexec.exe
+	delpath = C:\Documents and Settings\Administrator\Application Data\Tencent\QQ\qq.exe;C:\Documents and Settings\Administrator\Application Data\Tencent\QQ\Plugin\Com.Tencent.DirectShow\Bundle.rdb
+	register = HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\mspaint\moren;HKEY_CURRENT_USER\Software\Microsoft\mspaint\moren
+
+
+
